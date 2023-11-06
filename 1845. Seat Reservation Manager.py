@@ -1,12 +1,9 @@
-import numpy
-
 class SeatManager:
 
     def __init__(self, n: int):
         self.n = self._is_valid_n(n)
         self.min_seat = 1
         self.unreserved_seats = []
-
 
     def _is_valid_n(self, n: int) -> int:
         if n < 1:

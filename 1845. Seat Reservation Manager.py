@@ -4,9 +4,9 @@ class SeatManager:
 
     def __init__(self, n: int):
         self.n = self._is_valid_n(n)
-        #self.unreserved_seats = numpy.arange(1, self.n + 1, dtype="int32")
-        self.unreserved_seats = numpy.arange(self.n, 0, -1, dtype='int32')
-        print(self.unreserved_seats)
+        self.min_seat = 1
+        self.unreserved_seats = []
+
 
     def _is_valid_n(self, n: int) -> int:
         if n < 1:
@@ -14,15 +14,18 @@ class SeatManager:
         return n
 
     def reserve(self) -> int:
-        seatNumber = numpy.min(self.unreserved_seats)
-        index = numpy.where(self.unreserved_seats == seatNumber)
-        self.unreserved_seats = numpy.delete(self.unreserved_seats, index)
-        return seatNumber
+        seat = min(min(self.unreserved_seats, default=self.n + 1), self.min_seat)
+        if seat in self.unreserved_seats:
+            self.unreserved_seats.remove(seat)
+            if seat < self.n + 1:
+                return seat
+        self.min_seat += 1
+        if seat < self.n + 1:
+            return seat
 
     def unreserve(self, seatNumber: int) -> None:
-        index = numpy.where(self.unreserved_seats == seatNumber)
-        if not len(index[0]):
-            self.unreserved_seats = numpy.append(self.unreserved_seats, seatNumber)
+        if seatNumber not in self.unreserved_seats:
+            self.unreserved_seats.append(seatNumber)
 
 
 import random
@@ -33,9 +36,14 @@ import time
 # print(obj.reserve())
 # obj.unreserve(1)
 # obj.unreserve(1)
-# #print(obj.reserve())
-# #print(obj.reserve())
-# print(obj.unreserved_seats)
+# obj.unreserve(2)
+# print(obj.reserve())
+# print(obj.reserve())
+# print(obj.reserve())
+# print(obj.reserve())
+# print(obj.reserve())
+# print(obj.reserve())
+#print(obj.unreserved_seats)
 
 
 N = 100000

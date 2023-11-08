@@ -3,46 +3,27 @@ import random
 
 class Solution:
 
-    DICT = {
-            "(": "()[{",
-            ")": "()[]{}",
-            "[": "[]({",
-            "]": "()[]{}",
-            "{": "{}([",
-            "}": "()[]{}",
-            }
-
     def isValid(self, s: str) -> bool:
-        if s[-1] in "([{":
+        if s[0] in ")]}" or s[-1] in "([{":
             return False
-        if len(s) % 2 != 0:
-            return False
-        possible = "([{"
+        should = []
         for char in s:
-            if char not in possible:
-                return False
-            possible = self.DICT.get(char)
-
-        s = list(s)
-        while True:
-            try:
-                if len(s) == 0:
-                    return True
-                char = s[0]
-                match char:
-                    case "("|")":
-                        s.remove("(")
-                        s.remove(")")
-                    case "["|"]":
-                        s.remove("[")
-                        s.remove("]")
-                    case "{"|"}":
-                        s.remove("{")
-                        s.remove("}")
-                    case _:
+            match char:
+                case "(":
+                    should.append(")")
+                case "[":
+                    should.append("]")
+                case "{":
+                    should.append("}")
+                case _:
+                    if char not in should:
                         return False
-            except:
-                return False
+                    if should[-1] != char:
+                        return False
+                    should.pop()
+
+        return not bool(len(should))
 
 
 print(Solution().isValid("[([]])"))
+                         #}

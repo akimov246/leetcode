@@ -5,9 +5,6 @@ class Graph:
     def __init__(self, n: int, edges: list[list[int]]):
         self.n = self._is_valid_n(n)
         self.edges = edges
-        print(self.edges)
-        print()
-
 
     def _is_valid_n(self, n):
         if n > 0:
@@ -23,7 +20,6 @@ class Graph:
 
     def addEdge(self, edge: list[int]) -> None:
         self.edges.append(edge)
-        return None
 
     def shortestPath(self, node1: int, node2: int) -> int:
         unvisited = dict.fromkeys(range(self.n), math.inf)
@@ -35,11 +31,15 @@ class Graph:
             for edge in possible_nodes:
                 node = edge[1]
                 length_path = edge[2]
-                if unvisited.get(w) != math.inf and unvisited.get(w) + length_path < unvisited.get(node):
-                    unvisited.update({node: unvisited.get(w) + length_path})
+                try:
+                    if unvisited.get(w) != math.inf and unvisited.get(w) + length_path < unvisited.get(edge[1]):
+                        unvisited.update({edge[1]: unvisited.get(w) + length_path})
+                except:
+                    if unvisited.get(w) != math.inf and unvisited.get(w) + length_path < visited.get(node):
+                        unvisited.update({node: unvisited.get(w) + length_path})
             visited.update({w: unvisited.get(w)})
             unvisited.pop(w)
-        return visited.get(node2)
+        return -1 if visited.get(node2) == math.inf else visited.get(node2)
 
 
 
@@ -49,6 +49,6 @@ n = 4
 edges = [[0, 2, 5], [0, 1, 2], [1, 2, 1], [3, 0, 3]]
 
 obj = Graph(n, edges)
-#obj.addEdge([1, 3, 4])
-param_2 = obj.shortestPath(0, 2)
+obj.addEdge([1, 3, 4])
+param_2 = obj.shortestPath(0, 3)
 print(param_2)

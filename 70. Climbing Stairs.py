@@ -1,28 +1,39 @@
+import math
+import time
+import itertools
+
 class Solution:
+
     def climbStairs(self, n: int) -> int:
+        steps = [1 for i in range(n)]
         result = 0
-        if 1 == n:
-            result += 1
-        if n == 2:
-            result += 1
-        gen = self.rec(n, "1")
-        for steps in gen:
-            if sum(steps) == n:
-                result += 1
-        gen = self.rec(n, "2")
-        for steps in gen:
+        try:
+            while True:
+                permutations = math.factorial(len(steps)) // (math.factorial(steps.count(1)) * math.factorial(steps.count(2)))
+                result += permutations
+                steps.remove(1)
+                steps.remove(1)
+                steps.append(2)
+        except:
+            return result
+
+
+    def mySlowClimbStairs(self, n: int) -> int:
+        result = 0
+        for steps in self.steps_generator(n):
             if sum(steps) == n:
                 result += 1
         return result
 
-    def rec(self, n, first):
-        last = first
-        while len(last) != n:
-            yield [int(char) for char in list(last + "1")]
-            yield [int(char) for char in list(last + "2")]
-            last = last + first
+    def steps_generator(self, n):
+        power = 1
+        while power < n:
+            for i in range(2 ** power):
+                l = list(str(bin(i))[2:].rjust(power, "0").replace("1", "2").replace("0", "1"))
+                yield tuple(int(num) for num in l)
+            power += 1
+        yield tuple(1 for i in range(n))
 
-#print(*Solution().rec(3, "1"))
-
-print(Solution().climbStairs(4))
-
+start = time.perf_counter()
+print(Solution().climbStairs(100))
+print(time.perf_counter() - start)

@@ -2,12 +2,14 @@ import string
 
 class Solution:
     def convertToTitle(self, columnNumber: int) -> str:
-        letters = {i: char for i, char in enumerate(string.ascii_uppercase, start=1)}
+        columnNumber -= 1
+        letters = {i: char for i, char in enumerate(string.ascii_uppercase)}
         result = ""
-        while columnNumber > 0:
-            result += letters.get(columnNumber % (len(letters)) + 1)
+        result += letters.get(columnNumber % len(letters))
+        while columnNumber >= len(letters):
             columnNumber //= len(letters)
-        return result
+            columnNumber -= 1
+            result += letters.get(columnNumber % len(letters))
+        return result[::-1]
 
-print(675 % 27)
-print(Solution().convertToTitle(701))
+print(Solution().convertToTitle(27)) #"FXSHRXW"

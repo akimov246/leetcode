@@ -1,0 +1,4 @@
+select name as Customers FROM customers
+where id not in (select customers.id
+                 from customers JOIN orders
+                 ON customers.id = orders.customerid)

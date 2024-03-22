@@ -1,20 +1,21 @@
 class Solution:
     def canThreePartsEqualSum(self, arr: list[int]) -> bool:
-        arr = tuple(arr)
         total = sum(arr)
+        if total % 3:
+            return False
         for i in range(1, len(arr)):
-            for j in range(2, len(arr)):
-                if i < j:
-                    a = arr[:i]
-                    b = arr[i:j]
-                    c = arr[j:]
-                    count = sorted((a, b, c), key=len)
-                    s1 = sum(count[0])
-                    s2 = sum(count[1])
-                    if s1 == s2 == (total - s1 -s2):
+            a = sum(arr[:i])
+            j = i + 1
+            if a and (total - a) % a:
+                continue
+            b = arr[i]
+            while j < len(arr):
+                if a == b:
+                    if sum(arr[j:]) == a:
                         return True
-
+                b += arr[j]
+                j += 1
 
         return False
 
-print(Solution().canThreePartsEqualSum(arr = [12,-4,16,-5,9,-3,3,8,0]))
+print(Solution().canThreePartsEqualSum(arr = [3,3,6,5,-2,2,5,1,-9,4]))

@@ -1,14 +1,9 @@
 class Solution:
     def countOdds(self, low: int, high: int) -> int:
-        count = 0
-        x = low
-        while x <= high:
-            if x % 2:
-                count += 1
-                x += 2
-            else:
-                x += 1
+        if low % 2:
+            low -= 1
+        if high % 2:
+            high += 1
+        return (high - low) // 2
 
-        return count
-
-print(Solution().countOdds(low = 3, high = 7))
+print(Solution().countOdds(low = 8, high = 10))

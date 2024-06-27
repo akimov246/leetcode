@@ -23,18 +23,11 @@ class Solution:
         nodes.sort()
         print(nodes)
 
-        # def select_node_idx(nodes: list[int]) -> int:
-        #     if len(nodes) % 2:
-        #         return len(nodes) // 2
-        #     else:
-        #         return len(nodes) // 2 - 1
-
-        def get_node_idx(left: int, right: int) -> int:
-            sum_ = left + right
-            if sum_ % 2:
-                return sum_ // 2
+        def get_middle_idx(nodes: list[int]) -> int:
+            if len(nodes) % 2:
+                return len(nodes) // 2
             else:
-                return sum_ // 2 - 1
+                return len(nodes) // 2 - 1
 
         def add_new_node(node: TreeNode, value: int) -> None:
             if value < node.val:
@@ -49,57 +42,22 @@ class Solution:
                     node.right = TreeNode(value)
 
         new_nodes = []
-        stack_rights = []
-        def make_new_nodes(left: int = None, right: int = None):
-            index = None
-            if left is None and right is None:
-                index = get_node_idx(0, len(nodes))
-            elif left != right:
-                index = get_node_idx(left, right)
-
-            if index is not None and nodes[index]:
+        def make_new_nodes(nodes: list[int]):
+            if nodes:
+                index = get_middle_idx(nodes)
                 new_nodes.append(nodes[index])
-                nodes[index] = 0
-                right = index
-                stack_rights.reverse()
-                stack_rights.append(right)
-                stack_rights.reverse()
-                index -= 1
-                while index > -1:
-                    if nodes[index] == 0:
-                        left = index
-                        break
-                    index -= 1
-                else:
-                    left = 0
-                make_new_nodes(left, right)
+                make_new_nodes(nodes[:index])
+                make_new_nodes(nodes[index + 1:])
 
-                left = stack_rights.pop()
-                index = left + 1
-
-                while index < len(nodes):
-                    if nodes[index] == 0:
-                        right = index
-                        break
-                    index += 1
-                else:
-                    right = len(nodes)
-                make_new_nodes(left + 1, right)
-
-        def make_bst():
-            make_new_nodes()
-            print(new_nodes)
-            new_root = TreeNode(new_nodes.pop(0))
+        make_new_nodes(nodes)
+        def make_new_tree():
+            root = TreeNode(new_nodes.pop(0))
             for node in new_nodes:
-                add_new_node(new_root, node)
-            return new_root
+                add_new_node(root, node)
+            return root
 
-        return make_bst()
+        return make_new_tree()
 
-
-
-
-# Попробовать написать генераторную функцию !
 
 root = TreeNode(1)
 root.right = TreeNode(15)

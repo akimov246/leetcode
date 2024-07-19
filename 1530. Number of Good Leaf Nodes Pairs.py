@@ -10,43 +10,51 @@ class TreeNode:
     def __repr__(self):
         return f'{self.val}'
 
+# Решение с LeetCode. Я слишком тупорылый, чтоб такое высрать
 class Solution:
+    def _traverse_tree(self, curr_node, prev_node, graph, leaf_nodes):
+        if curr_node is None:
+            return
+        if curr_node.left is None and curr_node.right is None:
+            leaf_nodes.add(curr_node)
+        if prev_node:
+            if prev_node not in graph:
+                graph[prev_node] = []
+            graph[prev_node].append(curr_node)
+
+            if curr_node not in graph:
+                graph[curr_node] = []
+            graph[curr_node].append(prev_node)
+
+        self._traverse_tree(curr_node.left, curr_node, graph, leaf_nodes)
+        self._traverse_tree(curr_node.right, curr_node, graph, leaf_nodes)
+
     def countPairs(self, root: TreeNode, distance: int) -> int:
-        self.nodes = []
+        graph = {}
+        leaf_nodes = set()
 
-        def get_all_nodes(node: TreeNode):
-            if node:
-                if node.left or node.right:
-                    self.nodes.append(node)
-                get_all_nodes(node.left)
-                get_all_nodes(node.right)
+        self._traverse_tree(root, None, graph, leaf_nodes)
+        #print(graph)
+        #print(leaf_nodes)
+        ans = 0
 
-        get_all_nodes(root)
-        print(self.nodes)
-
-        dist_to_leaves_map = defaultdict(list)
-
-        def get_dist_to_leaves(root: TreeNode, node: TreeNode, dist: int = 0):
-            if node:
-                if node.left is None and node.right is None:
-                    dist_to_leaves_map[root.val].append(dist)
-                else:
-                    dist += 1
-                    get_dist_to_leaves(root, node.left, dist)
-                    get_dist_to_leaves(root, node.right, dist)
-
-        for node in self.nodes:
-            get_dist_to_leaves(node, node)
-        print(dist_to_leaves_map)
-
-        counter = 0
-        for node in dist_to_leaves_map:
-            if len(dist_to_leaves_map[node]) > 1:
-                for i in range(len(dist_to_leaves_map[node])):
-                    for j in range(i + 1, len(dist_to_leaves_map[node])):
-                        if dist_to_leaves_map[node][i] + dist_to_leaves_map[node][j] <= distance:
-                            counter += 1
-        return counter
+        for leaf in leaf_nodes:
+            bfs_queue = []
+            seen = set()
+            bfs_queue.append(leaf)
+            seen.add(leaf)
+            for i in range(distance + 1):
+                size = len(bfs_queue)
+                for j in range(size):
+                    curr_node = bfs_queue.pop(0)
+                    if curr_node in leaf_nodes and curr_node != leaf:
+                        ans += 1
+                    if curr_node in graph:
+                        for neighbor in graph.get(curr_node):
+                            if neighbor not in seen:
+                                bfs_queue.append(neighbor)
+                                seen.add(neighbor)
+        return ans // 2
 
 root = TreeNode(15)
 root.left = TreeNode(66)

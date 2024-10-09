@@ -4,18 +4,23 @@ class Solution:
         counter_open = 0
         counter_close = 0
         s = list(s)
-        for i, char in enumerate(s):
-            if char == '[':
+        left = 0
+        right = len(s) - 1
+        while left < right:
+            if s[left] == '[':
                 counter_open += 1
-            elif char == ']':
+            elif s[left] == ']':
                 counter_close += 1
+
             if counter_close > counter_open:
-                x = s[::-1].index('[')
-                y = len(s) - 1 - x
-                s[i], s[y] = s[y], s[i]
-                counter_open += 1
+                while s[right] != '[':
+                    right -= 1
+                s[left], s[right] = s[right], s[left]
                 counter_close -= 1
+                counter_open += 1
                 swaps += 1
+
+            left += 1
 
         return swaps
 

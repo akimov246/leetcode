@@ -1,18 +1,23 @@
+from collections import defaultdict
+
 class Solution:
     def minimumTotalDistance(self, robot: list[int], factory: list[list[int]]) -> int:
+        total = float('inf')
+        robot.sort()
+        factory.sort(key=lambda item: item[0])
+        factory = [f[0] for f in factory for _ in range(f[1])]
+        print(factory)
+        print(robot)
 
-        def helper(robot, factory, total):
-            r = robot.pop()
-            tmp_f = []
-            for i in range(len(factory)):
-                pos = factory[i][0]
-                limit = factory[i][1]
-                if limit:
-                    tmp_f.append(factory[i])
-            for i in range(len(tmp_f)):
+        start = 0
+        while start + len(robot) <= len(factory):
+            current = 0
+            dbg = factory[start:]
+            for r, f in zip(robot, factory[start:]):
+                current += abs(r - f)
+            total = min(total, current)
+            start += 1
 
+        return total
 
-
-
-
-print(Solution().minimumTotalDistance(robot = [0,4,6], factory = [[2,2],[6,2]]))
+print(Solution().minimumTotalDistance(robot = [9,11,99,101], factory = [[10,1],[7,1],[14,1],[100,1],[96,1],[103,1]]))

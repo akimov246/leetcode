@@ -1,3 +1,4 @@
+# Решил, но дерьмовым случаем. Нормальным способом не получается
 class Solution:
     def minimumTime(self, grid: list[list[int]]) -> int:
         weights = {(i, j):float('inf') for i in range(len(grid))

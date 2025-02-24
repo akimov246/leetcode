@@ -1,15 +1,14 @@
 from typing import Optional
-import re
 
-#Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
-#
-#     def __repr__(self):
-#         return f'TreeNode({self.val})'
+# Definition for a binary tree node.
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+    def __repr__(self):
+        return f'{self.val}'
 
 
 class Solution:
@@ -19,56 +18,60 @@ class Solution:
         self.traversal = None
 
     def recoverFromPreorder(self, traversal: str) -> Optional[TreeNode]:
-        root_idx = traversal.find('-') if traversal.find('-') != -1 else int(traversal)
-        self.root, self.traversal = TreeNode(int(traversal[:root_idx])), traversal[root_idx + 1:]
-        self.root.level = 0
 
-        print(self.root)
-        print(self.traversal)
+        self.traversal = traversal
 
-        def parser(node=self.root, subtree=self.traversal, level=1):
-            if not subtree:
+        def helper(node, t: str):
+            if not t:
                 return False
-            result = re.split(fr'(?<!-){"-" * level}(?!-)', subtree)
-            left = result[0]
-            right = None
-            if len(result) > 1:
-                right = result[1]
-            #print(left, right)
-            if left:
-                left_value = int(subtree[:left.find('-')]) if left.find('-') != -1 else int(left)
-                node.left = TreeNode(left_value)
-                dash = False
-                cut_idx = 0
-                if left.find('-') == -1:
-                    return parser(node.left, '', level + 1)
-                for i in range(len(left)):
-                    if left[i] == '-':
-                        dash = True
-                    elif dash and left[i] != '-':
-                        cut_idx = i
+            if not self.root and t[0] != '-':
+                idx = t.find('-')
+                if idx == -1:
+                    self.root = TreeNode(int(traversal))
+                else:
+                    self.root = TreeNode(int(traversal[:idx]))
+                return helper(self.root, t[idx:])
+            if t[0] == '-':
+                dash_target = None
+                for i, char in enumerate(t):
+                    if char != '-':
+                        dash_target = t[:i]
                         break
-                return parser(node.left, left[cut_idx:], level + 1)
-            if right:
-                right_value = int(subtree[:right.find('-')]) if right.find('-') != -1 else int(right)
-                node.left = TreeNode(right_value)
-                dash = False
-                cut_idx = 0
-                if left.find('-') == -1:
-                    return parser(node.right, '', level + 1)
-                for i in range(len(right)):
-                    if right[i] == '-':
-                        dash = True
-                    elif dash and right[i] != '-':
-                        cut_idx = i
+                idx = 0
+                leaves = []
+                while True:
+                    idx = t.find(dash_target, idx)
+                    if idx == -1 or len(leaves) == 2:
                         break
-                return parser(node.right, right[cut_idx:], level + 1)
+                    if t[idx + len(dash_target)] != '-' and t[idx - 1] != '-':
+                        for i in range(idx + len(dash_target), len(t)):
+                            if i == len(t) - 1:
+                                value = int(t[idx + len(dash_target):len(t)])
+                                leaves.append((value, len(t)))
+                                break
+                            if t[i] == '-':
+                                dbg = t[idx + len(dash_target): i]
+                                value = int(t[idx + len(dash_target): i])
+                                leaves.append((value, i))
+                                break
+                    idx += 1
+                #print(leaves)
+                if len(leaves) == 2:
+                    val1, slice1 = leaves[0]
+                    val2, slice2 = leaves[1]
+                    node.left = TreeNode(val1)
+                    node.right = TreeNode(val2)
+                    helper(node.left, t[slice1: slice2 - len(str(val2)) - len(dash_target)])
+                    helper(node.right, t[slice2:])
+                elif len(leaves) == 1:
+                    val, slice = leaves[0]
+                    node.left = TreeNode(val)
+                    helper(node.left, t[slice:])
 
-
-        parser()
+        helper(self.root, self.traversal)
 
         return self.root
 
 
 
-print(Solution().recoverFromPreorder(traversal="1-2--3---4-5--6---7"))
+print(Solution().recoverFromPreorder(traversal = "1-2--3--4-5--6--7"))

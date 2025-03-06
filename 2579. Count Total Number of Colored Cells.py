@@ -10,4 +10,4 @@ class Solution:
 
         return helper(n)
 
-print(Solution().coloredCells(1488))
+print(Solution().coloredCells(5))

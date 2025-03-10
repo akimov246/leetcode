@@ -1,11 +1,12 @@
 def benchmark(function):
     from time import perf_counter
-    def wrapper(*args):
+    def wrapper(*args, **kwargs):
         start = perf_counter()
         #print(args)
-        print(function(*args))
+        result = function(*args, **kwargs)
         #function(*args)
         print(perf_counter() - start)
+        return result
     return wrapper
 
 

@@ -12,4 +12,4 @@ class Solution:
         return ans
 
 
-print(Solution().minBitwiseArray(nums = [22222222222222222222222222222222222]))
+print(Solution().minBitwiseArray(nums = [222]))

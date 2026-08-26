@@ -8,7 +8,7 @@ import (
 
 func main() {
 	fmt.Println(longestCommonPrefix([]string{"flower", "flow", "flight"}))
-	fmt.Println(longestCommonPrefix([]string{"dog","racecar","car"}))
+	fmt.Println(longestCommonPrefix([]string{"dog", "racecar", "car"}))
 }
 
 func longestCommonPrefix(strs []string) string {
@@ -17,14 +17,14 @@ func longestCommonPrefix(strs []string) string {
 		currentLength = min(len(word), currentLength)
 	}
 
-	outer:
+outer:
 	for currentLength > 0 {
 		prefix := strs[0][:currentLength]
 		for _, word := range strs {
 			if !strings.HasPrefix(word, prefix) {
 				currentLength--
 				continue outer
-			} 
+			}
 		}
 		return prefix
 	}

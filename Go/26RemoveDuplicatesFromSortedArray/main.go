@@ -7,13 +7,17 @@ func main() {
 }
 
 func removeDuplicates(nums []int) int {
-	visited := make(map[int]bool)
-	
-	for _, value := range nums {
-		if !visited[value] {
-			visited[value] = true
+	if len(nums) == 0 {
+		return 0
+	}
+
+	k := 1
+	for i := 1; i < len(nums); i++ {
+		if nums[i] != nums[i - 1] {
+			nums[k] = nums[i]
+			k++
 		}
 	}
-	fmt.Println(visited)
-	return len(visited)
+
+	return k
 }

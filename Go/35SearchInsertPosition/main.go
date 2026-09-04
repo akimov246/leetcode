@@ -9,7 +9,7 @@ func main() {
 }
 
 func searchInsert(nums []int, target int) int {
-	l, m, r := 0, 0, len(nums) - 1
+	l, m, r := 0, 0, len(nums)-1
 
 	for l <= r {
 		m = (l + r) / 2

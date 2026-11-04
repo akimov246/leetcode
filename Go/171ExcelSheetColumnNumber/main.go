@@ -1,8 +1,13 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 func main() {
+	fmt.Println(titleToNumber("A"))
+	fmt.Println(titleToNumber("AB"))
 	fmt.Println(titleToNumber("ZY"))
 }
 
@@ -36,9 +41,13 @@ var titleNumberMap = map[rune]int{
 }
 
 func titleToNumber(columnTitle string) int {
-	number := 1
+	number := 0
+
+	pow := len(columnTitle) - 1
 	for _, char := range columnTitle {
-		number *= titleNumberMap[char]
+		number += int(math.Pow(float64(len(titleNumberMap)), float64(pow))) * titleNumberMap[char]
+		pow--
 	}
+
 	return number
 }
